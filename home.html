@@ -1,0 +1,128 @@
+<html>
+	<head>	
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Lightning Network Invoice Decoder</title>
+
+		<link rel="stylesheet" href="scripts/codemirror-5.42.2/lib/codemirror.css">
+		<link rel="stylesheet" href="scripts/codemirror-5.42.2/theme/lightninginvoice.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+				
+		<style type="text/css">
+		body
+		{
+			font-family: "Helvetica";
+		}
+		
+		label
+		{
+			font-variant: small-caps;
+		}
+		
+		#invoice
+		{
+			width: 500px;
+		}
+		
+		#invoice-wrapper
+		{
+			padding: 20px;
+			border: 1px black solid;
+		}
+		
+		input.invoice-field
+		{
+			font-family: "Lucida Console", Monaco, monospace;
+		}
+		
+		</style>
+	</head>
+
+	<body>
+		
+		<div class="container">
+		  <div class="row">
+			<div class="col-sm">
+				<div id="invoice-wrapper">
+					<div id="invoice"></div>
+				</div>
+			</div>
+			<div class="col-sm">
+				<div class="text-center">
+					<canvas id="qr"></canvas>
+				</div>
+				<div class="row">
+				 	<div class="col-sm">
+						<label for="prefix">Prefix:</label>
+					</div>
+					<div class="col-sm">
+						<input type="text" class="invoice-field" id="prefix" />
+					</div>
+				</div>
+				<div class="row">
+				 	<div class="col-sm">
+						<label for="amount">Amount:</label>
+					</div>
+					<div class="col-sm">
+						<input type="number" class="invoice-field" id="amount" />
+					</div>
+				</div>
+				
+			</div>
+		  </div>
+
+		</div>
+		
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<script src="scripts/codemirror-5.42.2/lib/codemirror.js"></script>
+		<script src="scripts/codemirror-5.42.2/addon/mode/simple.js"></script>
+		<script src="scripts/codemirror-5.42.2/mode/lightninginvoice/lightninginvoice.js"></script>
+		<script src="scripts/qrious/qrious.min.js"></script>
+		<script>
+		var cm;
+		$(document).ready(function()
+		{
+			var $prefix = $("#prefix");
+			var $amount = $("#amount");
+		
+		    var qr = new QRious({
+			  element: document.getElementById('qr'),
+			  value: 'lnbc10u1pwr9x7lpp5jauqnhf4h8xu6hv27w8u6sa9t3tg2kjnw3dnpec2lya72h7uuelqdqlxycrqvpqwdshgueqvfjhggr0dcsry7qcqzysrswj9cepfheq0zqkvgvlsejlqfv5p4jrmr6w3jurrx2vmle59vaqm06gpxnjktr2x3p4mx6mvtexq4elwwdmjc20jrg0fjyvzttqntgqnrt286',
+			  size: 300,
+			  level: 'M'
+			});
+
+		
+			cm = CodeMirror(document.getElementById("invoice"), 
+			{
+				value: "lnbtc10u1pwr9xcspp5gt948ghx2kpn2qrp732t0y43ga309lqg73ch2p4zykhtcsy00kyqdqlxycrqvpqwdshgueqvfjhggr0dcsry7qcqzyssxcj20up30ztmrrgewf4u8pm5k8x048cvn8arkfz4kf06u2n3wehmshf26zl44ag9n6rh2q9m203p4f37eqyscuq5cs9kdm0rd48ywcp0mwtw3",
+				mode:"lightninginvoice",
+				theme: "lightninginvoice",
+				lineWrapping: true,
+			});
+
+			function editorChanged(editor)
+			{
+				$("#prefix").val(cm.getLineTokens(0)[0].string);
+				qr.value = editor.getValue();			
+			}
+
+			cm.on("change", editorChanged);
+
+			$prefix.on("change", function()
+			{
+			});
+
+			$amount.on("change", function()
+			{
+			});
+			
+			editorChanged(cm);
+		});
+		
+		</script>
+	</body>
+	
+</html>
